@@ -1,0 +1,10 @@
+Linting set up
+Git automation set up for testing 
+get actual license file 
+
+flesh out mail server class logic (idk if want to pydantic or not)
+create config for running (uses pword -- obfuscate or .gitignore?)
+test some actual messages
+
+
+Add ability to attach media
