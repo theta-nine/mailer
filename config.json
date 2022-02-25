@@ -4,8 +4,7 @@
 		"port": 465
 	},
 	"user": {
-		"email": "jon@jrickman.net",
-		"encrypted_password": "gAAAAABiFvOSUKVxZlSUezufn21rBX-VloqXNbr2a0MhnRpbiJDKf7rd1Deo71nXXNY_jc39h3Ey0eDs56_q_gJzE69zMSVdDADGucvPwpOFCvY4nyHy4Q4="
+		"email": "jon@jrickman.net"
 	},
 	"crypto": {
 		"salt": "A9fB1#p6m&R%3",

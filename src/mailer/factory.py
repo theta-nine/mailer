@@ -1,4 +1,5 @@
 import smtplib
+import imaplib
 import ssl
 import json
 from email.mime.text import MIMEText
@@ -12,25 +13,36 @@ class Factory():
         # this crypto helper is used to encrypting / decrypting 
         self.crypto = CryptoHelper(config_filepath)
 
-        # set server settings
-        server_config = json.load(open(config_filepath))["server"]
-        self.port = server_config["port"]
-        self.hostname = server_config["hostname"]
+        config = json.load(open(config_filepath))
 
-        # set user settings, used for login
-        user_config = json.load(open(config_filepath))["user"]
-        self.email = user_config["email"]
-        encrypted_password = user_config["encrypted_password"]
-        self.password = self.crypto.decrypt_text_with_password(encrypted_password, password)
+        # set server settings
+        self.port = config["server"]["port"]
+        self.hostname = config["server"]["hostname"]
+
+        # set the email and password
+        self.email = config["user"]["email"]
+        self.password = password
     
     def __str__(self):
         return(f"{self.email}@{self.hostname}:{self.port}")
 
-    def send_message(self, message):
+    def send_message(self, message: MIMEText):
         context = ssl.create_default_context()
 
-        with smtplib.SMTP_SSL("smtp.migadu.com", self.port, context=context) as server:
+        with smtplib.SMTP_SSL(self.hostname, self.port, context=context) as server:
             server.login(self.email, self.password)
-            #the below won't work
-            server.sendmail(message.sender, message.receivers, message.as_string())
+            # #the below won't work
+            # server.sendmail(message["From"], message["To"], message.as_string())
             print('mail successfully sent')
+
+    def get_messages(self):
+        context = ssl.create_default_context()
+
+        with imaplib.IMAP4_SSL("imap.migadu.com", 993 ,ssl_context=context) as server:
+            server.login(self.email, self.password)
+            server.select('Inbox')
+            _, data = server.search(None, 'ALL')
+            mail_ids = list()
+            for block in data:
+                mail_ids += block.split()
+                print(mail_ids)
